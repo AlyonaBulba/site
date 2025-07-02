@@ -17,6 +17,10 @@ SMTP_PASSWORD = "kkyv asku gvvm eyrb"
 
 app = Flask(__name__)
 app.secret_key = "очень_секретный_ключ_сюда"
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_SAMESITE="Lax"
+)
 
 def send_confirmation_code(to_email, code):
     msg = MIMEText(f"Ваш код подтверждения: {code}")
