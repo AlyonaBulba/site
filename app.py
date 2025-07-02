@@ -160,18 +160,14 @@ def save_address():
     lat = request.form.get('lat')
     lng = request.form.get('lng')
 
-    if not lat or not lng:
-        return "Координаты не указаны", 400
-
-    try:
-        session[f"address_{email}"] = {
-            "lat": float(lat),
-            "lng": float(lng)
-        }
-        session.modified = True
-        flash("Адрес сохранён успешно!")
-    except ValueError:
-        return "Неверный формат координат", 400
+    if lat and lng:
+        try:
+            lat = float(lat)
+            lng = float(lng)
+            session[f"address_{email}"] = {"lat": lat, "lng": lng}
+            session.modified = True
+        except ValueError:
+            pass  # невалидные координаты
 
     return redirect(url_for('profile'))
 
