@@ -151,6 +151,29 @@ def checkout():
         return f"Ошибка при отправке письма: {str(e)}", 500
 
 
+@app.route('/save_address', methods=['POST'])
+def save_address():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+
+    email = session['user']
+    lat = request.form.get('lat')
+    lng = request.form.get('lng')
+
+    if not lat or not lng:
+        return "Координаты не указаны", 400
+
+    try:
+        session[f"address_{email}"] = {
+            "lat": float(lat),
+            "lng": float(lng)
+        }
+        session.modified = True
+        flash("Адрес сохранён успешно!")
+    except ValueError:
+        return "Неверный формат координат", 400
+
+    return redirect(url_for('profile'))
 
 
 
