@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Профиль{% endblock %}
+{% block content %}
+
+<style>
+  .profile-container {
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 40px;
+    background: white;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .profile-container h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .profile-container p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 15px;
+  }
+
+  .logout-button, .change-password-button {
+    background: #4e54c8;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.3s ease;
+    margin: 10px;
+  }
+
+  .logout-button:hover {
+    background: #d32f2f;
+  }
+
+  .change-password-button:hover {
+    background: #5c63e0;
+  }
+</style>
+
+<div class="profile-container">
+  <h2>Ваш профиль</h2>
+  <p>Почта: <strong>{{ email }}</strong></p>
+
+  {% if address_str %}
+    <p>Адрес: <strong>{{ address_str }}</strong></p>
+  {% endif %}
+
+
+  <a class="change-password-button" href="/forgot_password">🔑 Сменить пароль</a>
+  <a class="logout-button" href="/logout">🔓 Выйти из аккаунта</a>
+
+  <button class="change-password-button" onclick="document.getElementById('addressMap').style.display='block'">📍 Мой адрес</button>
+
+  <div id="addressMap" style="display:none; margin-top: 20px;">
+    <div id="map" style="height: 300px; width: 100%; margin-bottom: 15px;"></div>
+    <form method="POST" action="/save_address">
+      <input type="hidden" name="lat" id="lat">
+      <input type="hidden" name="lng" id="lng">
+      <button type="submit" class="change-password-button">✅ Сохранить адрес</button>
+    </form>
+  </div>
+</div>
+
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  let map;
+  let marker;
+
+  function initLeafletMap() {
+    if (!navigator.geolocation) {
+      alert("Геолокация не поддерживается");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      map = L.map('map').setView([lat, lng], 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+      document.getElementById('lat').value = lat;
+      document.getElementById('lng').value = lng;
+
+      marker.on('dragend', function(e) {
+        let coords = marker.getLatLng();
+        document.getElementById('lat').value = coords.lat;
+        document.getElementById('lng').value = coords.lng;
+      });
+    }, function() {
+      alert("Не удалось получить местоположение");
+    });
+  }
+
+  document.querySelector('button[onclick]').addEventListener('click', initLeafletMap);
+</script>
+
+{% endblock %}

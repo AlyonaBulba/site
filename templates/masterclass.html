@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% block title %}Корзина{% endblock %}
+{% block content %}
+
+<style>
+  .cart-container {
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid #eee;
+    padding: 20px 0;
+    position: relative;
+  }
+
+  .cart-item img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .cart-item-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .cart-item-details a {
+    text-decoration: none;
+    color: #333;
+  }
+
+  .cart-item-details h3 {
+    margin: 0 0 10px;
+    font-size: 30px; /* было 20px */
+    font-weight: 600;
+  }
+
+  .cart-item-details .price {
+    font-size: 30px;  /* было 17px */
+    color: #e91e63;
+    font-weight: 600;
+  }
+
+
+  .remove-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: none;
+    border: none;
+    color: red;
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .remove-btn:hover {
+    transform: scale(1.2);
+  }
+
+  .cart-total {
+    text-align: right;
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+  }
+  .quantity-controls {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .quantity-controls button {
+    padding: 4px 10px;
+    font-size: 20px;
+    background: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .quantity-controls button:hover {
+    background: #1976d2;
+  }
+
+  .quantity-number {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .checkout-button {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 16px 0;
+    font-size: 22px;
+    font-weight: bold;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .checkout-button:hover {
+    background-color: #45a049;
+  }
+
+</style>
+
+<div class="cart-container">
+  <h2>Корзина</h2>
+
+  {% if cart_items %}
+    {% for item in cart_items %}
+      <div class="cart-item">
+        <img src="{{ url_for('static', filename='img/' ~ item.image) }}" alt="{{ item.name }}">
+      
+        <div class="cart-item-details">
+          <a href="{{ url_for('item_detail', index=item.index) }}">
+            <h3>{{ item.name }}</h3>
+          </a>
+          <div class="price">{{ item.price }} ₸</div>
+      
+          <form action="{{ url_for('change_quantity', index=item.index) }}" method="post" class="quantity-controls">
+            <button type="submit" name="action" value="decrease">–</button>
+            <span class="quantity-number">{{ item.quantity }}</span>
+            <button type="submit" name="action" value="increase">+</button>
+          </form>
+        </div>
+      
+        <form action="{{ url_for('remove_from_cart', index=item.index) }}" method="post">
+          <button class="remove-btn" title="Удалить">×</button>
+        </form>
+      </div>
+    
+    {% endfor %}
+
+    <div class="cart-total">
+      Итого: {{ total }} ₸
+    </div>
+    <form action="{{ url_for('checkout') }}" method="post">
+      <button type="submit" style="width: 100%; padding: 14px; font-size: 20px; background: #4CAF50; color: white; border: none; border-radius: 8px; margin-top: 20px; cursor: pointer;">
+        Оформить заказ
+      </button>
+    </form>
+    
+    
+    
+  {% else %}
+    <p>Корзина пуста</p>
+  {% endif %}
+</div>
+
+{% endblock %}

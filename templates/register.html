@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация{% endblock %}
+{% block content %}
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  .register-container {
+    max-width: 400px;
+    margin: 80px auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .register-container h2 {
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 28px;
+  }
+
+  .register-container input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: 0.3s;
+  }
+
+  .register-container input:focus {
+    border-color: #4caf50;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+  }
+
+  .register-container button {
+    width: 100%;
+    padding: 12px 14px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .register-container button:hover {
+    background-color: #43a047;
+  }
+
+  .register-container p {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+  }
+
+  .register-container a {
+    color: #4caf50;
+    text-decoration: none;
+  }
+
+  .register-container a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="register-container">
+  <h2>Создать аккаунт</h2>
+  <form method="POST">
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Пароль" required>
+    <button type="submit">Зарегистрироваться</button>
+  </form>
+  <p>Уже есть аккаунт? <a href="/login">Войти</a></p>
+</div>
+
+{% endblock %}

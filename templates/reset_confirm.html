@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Подтверждение кода{% endblock %}
+
+{% block content %}
+  <div class="confirm-container" style="max-width: 400px; margin: 50px auto; text-align: center;">
+    <h2 style="margin-bottom: 20px;">Подтвердите код</h2>
+
+    <form method="POST" action="/reset_confirm">
+      <input type="hidden" name="email" value="{{ email }}">
+
+      <input type="text" name="code" placeholder="Введите 6-значный код"
+             required style="padding: 10px; width: 100%; margin-bottom: 15px; border-radius: 6px; border: 1px solid #ccc;">
+
+      <button type="submit"
+              style="padding: 10px 20px; border: none; background-color: #333; color: white; border-radius: 6px; cursor: pointer;">
+        Проверить
+      </button>
+    </form>
+
+    <p style="margin-top: 20px; font-size: 14px; color: gray;">
+      Код отправлен на почту: <strong>{{ email }}</strong><br>
+      Срок действия: 8 минут
+    </p>
+  </div>
+{% endblock %}

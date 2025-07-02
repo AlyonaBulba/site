@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% block title %}Работы{% endblock %}
+{% block content %}
+
+<style>
+  body {
+    background: #f5f7fa;
+    font-family: 'Segoe UI', sans-serif;
+    color: #333;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    margin: 60px 0 30px;
+    color: #222;
+    position: relative;
+  }
+
+  .section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: #4e54c8;
+    margin: 14px auto 0;
+    border-radius: 2px;
+  }
+
+  .category-buttons {
+    text-align: center;
+    margin: 20px 0 40px;
+  }
+
+  .category-buttons button {
+    margin: 8px;
+    padding: 12px 24px;
+    border: 1px solid #4e54c8;
+    background-color: white;
+    color: #4e54c8;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .category-buttons button.active {
+    background-color: #4e54c8;
+    color: white;
+  }
+
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px 60px 60px;
+  }
+
+  .card {
+    width: 280px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  .card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #4e54c8;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover img {
+    transform: scale(1.03);
+  }
+
+  .card-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+
+  .card-content h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c2c2c;
+  }
+
+  .card-content p {
+    margin: 0;
+    font-size: 15px;
+    color: #666;
+  }
+
+  .price-and-button {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .card-content .price {
+    color: #4caf50;
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0;
+  }
+
+  .add-cart-button {
+    margin: 0;
+    padding: 8px 14px;
+    background-color: #4e54c8;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .add-cart-button:hover {
+    background-color: #43a047;
+  }
+
+  hr.section-divider {
+    margin: 80px auto;
+    border: none;
+    border-top: 2px solid #ddd;
+    width: 60%;
+  }
+
+  .sort-container {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+  }
+
+  .sort-toggle {
+    font-size: 21px;
+    padding: 6px 12px;
+    background-color: #fff;
+    border: 1px solid #4e54c8;
+    color: #4e54c8;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .sort-menu {
+    position: absolute;
+    right: 0;
+    top: 110%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: none;
+    min-width: 150px;
+  }
+
+  .sort-menu button {
+    display: block;
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .sort-menu button:hover {
+    background-color: #f0f0f0;
+  }
+</style>
+
+<h1 class="section-title">Новинки</h1>
+<div class="cards-container">
+  {% for item in newest %}
+    <form action="/add_to_cart/{{ item.index }}" method="post" style="text-decoration:none;color:inherit;">
+      <div class="card">
+        <a href="/item/{{ item.index }}">
+          <img src="{{ url_for('static', filename='img/' ~ item.image) }}" alt="{{ item.name }}">
+        </a>
+        <div class="card-content">
+          <h3>{{ item.name }}</h3>
+          <p>Размер: {{ item.size }}</p>
+          <p>Материал: {{ item.material }}</p>
+          <div class="price-and-button">
+            <div class="price">{{ item.price }} ₸</div>
+            <button type="submit" class="add-cart-button">Добавить в корзину</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  {% endfor %}
+</div>
+
+<hr class="section-divider">
+
+<div class="category-buttons">
+  <button onclick="filterByCategory('Все')" class="active">Все</button>
+  <button onclick="filterByCategory('Футболки')">Футболки</button>
+  <button onclick="filterByCategory('Худи')">Худи</button>
+  <button onclick="filterByCategory('Бейсболки')">Бейсболки</button>
+  <button onclick="filterByCategory('Сумки')">Сумки</button>
+  <button onclick="filterByCategory('Аксессуары')">Аксессуары</button>
+  <button onclick="filterByCategory('Другое')">Другое</button>
+  <div class="sort-container">
+    <button class="sort-toggle" onclick="toggleSortMenu()">⬍</button>
+    <div class="sort-menu" id="sortMenu">
+      <button onclick="sortItems('name')">Сортировать по имени</button>
+      <button onclick="sortItems('price')">Сортировать по цене</button>
+    </div>
+  </div>
+</div>
+
+<h1 class="section-title">Все товары</h1>
+<div class="cards-container" id="items-container">
+  {% for item in items %}
+    <form action="/add_to_cart/{{ item.index }}" method="post" data-category="{{ item.category }}">
+      <div class="card">
+        <a href="/item/{{ item.index }}">
+          <img src="{{ url_for('static', filename='img/' ~ item.image) }}" alt="{{ item.name }}">
+        </a>
+        <div class="card-content">
+          <h3>{{ item.name }}</h3>
+          <p>Размер: {{ item.size }}</p>
+          <p>Материал: {{ item.material }}</p>
+          <div class="price-and-button">
+            <div class="price">{{ item.price }} ₸</div>
+            <button type="submit" class="add-cart-button">Добавить в корзину</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  {% endfor %}
+</div>
+
+<script>
+  let activeCategories = new Set();
+
+  function filterByCategory(category) {
+    const buttons = document.querySelectorAll('.category-buttons button');
+    const items = document.querySelectorAll('#items-container form');
+
+    if (category === 'Все') {
+      activeCategories.clear();
+    } else {
+      if (activeCategories.has(category)) {
+        activeCategories.delete(category);
+      } else {
+        activeCategories.add(category);
+      }
+    }
+
+    buttons.forEach(btn => {
+      const cat = btn.textContent;
+      if (cat === 'Все' && activeCategories.size === 0) {
+        btn.classList.add('active');
+      } else if (activeCategories.has(cat)) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    items.forEach(el => {
+      const cat = el.getAttribute('data-category');
+      if (activeCategories.size === 0 || activeCategories.has(cat)) {
+        el.style.display = 'block';
+      } else {
+        el.style.display = 'none';
+      }
+    });
+  }
+
+  function toggleSortMenu() {
+    const menu = document.getElementById('sortMenu');
+    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+  }
+
+  function sortItems(type) {
+    const container = document.getElementById('items-container');
+    const cards = Array.from(container.querySelectorAll('form'));
+
+    cards.sort((a, b) => {
+      let valA, valB;
+      if (type === 'name') {
+        valA = a.querySelector('h3').textContent.trim().toLowerCase();
+        valB = b.querySelector('h3').textContent.trim().toLowerCase();
+      } else if (type === 'price') {
+        valA = parseInt(a.querySelector('.price').textContent.replace(/\D/g, ''));
+        valB = parseInt(b.querySelector('.price').textContent.replace(/\D/g, ''));
+      }
+      return valA > valB ? 1 : -1;
+    });
+
+    container.innerHTML = '';
+    cards.forEach(card => container.appendChild(card));
+
+    toggleSortMenu();
+  }
+
+  document.addEventListener('click', function(event) {
+    const sortContainer = document.querySelector('.sort-container');
+    if (!sortContainer.contains(event.target)) {
+      document.getElementById('sortMenu').style.display = 'none';
+    }
+  });
+</script>
+
+{% endblock %}

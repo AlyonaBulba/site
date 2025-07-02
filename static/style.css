@@ -1,0 +1,72 @@
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: linear-gradient(90deg, #4e54c8, #8f94fb); /* новые цвета */
+  padding: 28px 40px;
+  clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 120px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 30px;
+  font-weight: bold;
+  position: relative;
+  padding-bottom: 8px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  transition: color 0.3s ease;
+}
+
+.nav a:hover {
+  color: #ffd369; /* мягкий контраст при наведении */
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 3px;
+  left: 0;
+  bottom: 0;
+  background-color: #ffd369;
+  transition: width 0.3s ease;
+}
+
+.nav a:hover::after {
+  width: 100%;
+}
+
+.profile-icon {
+  height: 42px;
+  width: 42px;
+  filter: brightness(1000%) invert(1);
+  transition: transform 0.2s ease;
+}
+
+.profile-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Чтобы контент не залезал под фиксированную шапку */
+body {
+  margin: 0;
+  font-family: 'Georgia', 'Segoe UI', sans-serif;
+  background: #f4f4f9;
+  color: #333;
+  padding-top: 130px; /* примерно высота шапки + отступ */
+}

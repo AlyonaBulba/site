@@ -1,0 +1,57 @@
+<style>
+  .site-header {
+    background: linear-gradient(to right, #7f5af0, #6c63ff);
+    padding: 24px 60px;
+    color: white;
+    font-family: 'Arial', 'Tahoma', 'Verdana', sans-serif;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .site-header .nav {
+    display: flex;
+    align-items: center;
+    gap: 80px; /* Увеличено расстояние между ссылками */
+    font-weight: bold;
+    font-size: 20px; /* Немного больше размер текста */
+  }
+
+  .site-header .nav a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 0; /* Добавлен вертикальный отступ в ссылках */
+    transition: opacity 0.2s ease;
+  }
+
+  .site-header .nav a:hover {
+    opacity: 0.8;
+  }
+
+  .site-header .profile-icon {
+    width: 32px;
+    height: 32px;
+    margin-left: auto;
+    filter: brightness(0) invert(1);
+  }
+</style>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="/raboty">Главная</a>
+    <a href="/primery">Примеры</a>
+    <a href="/masterclass">Корзина</a>
+
+    {% if session.get('user') %}
+      {% if session.get('admin') %}
+        <a href="/admin">
+          <img src="{{ url_for('static', filename='img/profile-icon.svg') }}" alt="Профиль" class="profile-icon">
+        </a>
+      {% else %}
+        <a href="/profile">
+          <img src="{{ url_for('static', filename='img/profile-icon.svg') }}" alt="Профиль" class="profile-icon">
+        </a>
+      {% endif %}
+    {% else %}
+      <a href="/login" style="margin-left:auto;">Войти</a>
+    {% endif %}
+  </nav>
+</header>
